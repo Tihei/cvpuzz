@@ -18,48 +18,53 @@ using namespace cv;
 
 
 
-
-
-    int templatematching (int threshold = 0,Mat origin = Mat() ,Mat excerpt = Mat() , int ii ,int jj)
+    int templatematching (int threshold = 0, Mat origin = Mat() , Mat excerpt = Mat() , int ii=0, int jj=0)
     {
-        int ie,je=0;
-        while (abs(origin.at<int>(ii, jj) - excerpt.at<int>(ie, je)) < threshold && ii <= excerpt.rows) {
+        int ie = 0;
+        int je = 0;
+        int width_excerpt = excerpt.cols;
+        int height_excerpt = excerpt.rows;
 
-            ii++;
+        while (ii < width_excerpt) {
+
             ie++;
 
-            while (je <= (excerpt.cols) ) {
+            if (abs(origin.at<int>((ii+ie), (jj+je)) - excerpt.at<int>(ie, je) ) < threshold )
+            {
+            while (je < (height_excerpt) ) {
 
-                if (abs(origin.at<int>(ii, jj) - excerpt.at<int>(ie, je))> threshold)
-                {break;}
-                jj++;
-                je++;
+                if (abs(origin.at<int>((ii+ie), (jj+je)) - excerpt.at<int>(ie, je)) < threshold)
+                {
+                    je++;
+                }
+                else
+                    {return 1;}
+                }
+
             }
-
-
+            else
+            {return 1;}
         }
-        return (ii-(ie/2));
+        return (ii+(ie/2));
     }
 
 
-int location (int threshold = 10, Mat origin = Mat(), Mat excerpt = Mat())
+int location (int threshold = 10 , Mat origin = Mat() , Mat excerpt = Mat() )
 {
-    int w = origin.rows;
-    int h = origin.cols;
-    int wa = excerpt.rows;
-    int ha = excerpt.cols;
+        Mat origin_bw;
+        Mat excerpt_bw;
+        cvtColor(origin,origin_bw,COLOR_BGR2GRAY);
+        cvtColor(excerpt,excerpt_bw,COLOR_BGR2GRAY);
 
-    int ia,ja = 0;
-    int i = 0;
-    int j = 0;
+    int w = origin_bw.rows;
+    int h = origin_bw.cols;
 
-    for (i;i<w;i++) {
+    for (int i = 0 ; i < h ; i++) {
 
-        for (j; j < h; j++) {
+        for (int j = 0; j < w; j++) {
 
-            int match = templatematching(threshold,origin,excerpt,i,j);
-
-            if (match!=h){return match;}
+            int match = templatematching(threshold,origin_bw,excerpt,i,j);
+            if (match!=1){return match;}
         }
     }
 
@@ -69,12 +74,11 @@ int location (int threshold = 10, Mat origin = Mat(), Mat excerpt = Mat())
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    cv::Mat testbild = cv::imread("tmp.jpg");
+    cv::Mat testbild = cv::imread("tmp2.jpg");
     cv::Mat ausschnitt = cv::imread("tmpausschnitt.png");
     cv::imshow("fenster", testbild);
-    cv::waitKey(1000000);
+    cv::waitKey(10);
 
-
-   cout << location(10,testbild,ausschnitt);
+    cout << location(10,testbild,ausschnitt);
     return 0;
     }
