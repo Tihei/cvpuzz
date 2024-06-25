@@ -18,7 +18,7 @@ using namespace cv;
 
 
 
-    int templatematching (int threshold = 0, Mat origin = Mat() , Mat excerpt = Mat() , int ii=0, int jj=0)
+    int templatematching (uchar threshold, Mat & origin, Mat excerpt , int ii, int jj)
     {
         int ie = 0;
         int je = 0;
@@ -27,47 +27,64 @@ using namespace cv;
 
         while (ii < width_excerpt) {
 
-            ie++;
 
-            if (abs(origin.at<int>((ii+ie), (jj+je)) - excerpt.at<int>(ie, je) ) < threshold )
+
+            if (abs(origin.at<uchar>((ii+ie), (jj+je)) - excerpt.at<uchar>(ie, je) ) < threshold )
             {
-            while (je < (height_excerpt) ) {
 
-                if (abs(origin.at<int>((ii+ie), (jj+je)) - excerpt.at<int>(ie, je)) < threshold)
+            while (je < height_excerpt ) {
+
+                if (abs(origin.at<uchar>((ii+ie), (jj+je)) - excerpt.at<uchar>(ie, je)) < threshold)
                 {
                     je++;
+                    cout << "m" ;
+                    origin.at<uchar>((ii+ie),(jj+je)) = 255;
+                    circle(origin,Point((ii+ie),(jj+je)),5,Scalar_<double>(255,0,0));
                 }
                 else
-                    {return 1;}
+                    {
+                    cout << "N";
+                    return 1;}
                 }
+
+            ie++;
 
             }
             else
             {return 1;}
         }
-        return (ii+(ie/2));
+
+        return (ii+(width_excerpt/2)); // /2?
     }
 
 
-int location (int threshold = 10 , Mat origin = Mat() , Mat excerpt = Mat() )
-{
-        Mat origin_bw;
-        Mat excerpt_bw;
+    unsigned int location (uchar threshold , Mat& origin, Mat& excerpt)
+    {
+        Mat origin_bw(origin.rows,origin.cols,CV_8U);
+        Mat excerpt_bw(excerpt.rows,excerpt.cols,CV_8U);;
+        //origin.convertTo(origin_bw,)
         cvtColor(origin,origin_bw,COLOR_BGR2GRAY);
         cvtColor(excerpt,excerpt_bw,COLOR_BGR2GRAY);
-
+        imshow("og_bw",origin_bw);
+        waitKey(0);
+        imshow("ex_bw",excerpt_bw);
+        waitKey(0);
     int w = origin_bw.rows;
     int h = origin_bw.cols;
+    int match = 0;
 
     for (int i = 0 ; i < h ; i++) {
 
         for (int j = 0; j < w; j++) {
 
-            int match = templatematching(threshold,origin_bw,excerpt,i,j);
-            if (match!=1){return match;}
+            match = templatematching(threshold,origin_bw,excerpt_bw,i,j);
+            if (match>1){return match;}
+            cout << j << "x ";
         }
+        cout << "i: "<< i << " " << endl;
     }
 
+    return 1;
 }
 
 
@@ -75,10 +92,31 @@ int location (int threshold = 10 , Mat origin = Mat() , Mat excerpt = Mat() )
 int main() {
     std::cout << "Hello, World!" << std::endl;
     cv::Mat testbild = cv::imread("tmp2.jpg");
-    cv::Mat ausschnitt = cv::imread("tmpausschnitt.png");
+    cv::Mat ausschnitt = cv::imread("tmpausschnitt.jpg");
     cv::imshow("fenster", testbild);
-    cv::waitKey(10);
+    cv::waitKey(100000);
+    cv::imshow("Ausschitt",ausschnitt);
+    waitKey(0);
+    unsigned int result = location(2,testbild,ausschnitt);
+    if(result!=1)
+    {
 
-    cout << location(10,testbild,ausschnitt);
+        cout << "Bildausschnitt im Bild gefunden!\n" << "Es befindet sich in Reihe " << result << "" << endl;
+        for(int i=0;i<testbild.rows;i++)
+        {
+            testbild.at<uchar>(result,i) = (255);
+
+        }
+
+        cout << result << endl;
+
+        cv::imshow("fenster2", testbild); //Test test test i love uuu <3 work weiter bitch
+        cv::waitKey(100000);
+
+    }
+    else
+    {
+        cout << "Bildausschnitt nicht im Bild gefunden!" << endl;
+    }
     return 0;
     }
