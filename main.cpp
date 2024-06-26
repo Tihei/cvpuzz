@@ -17,41 +17,62 @@ using namespace std;
 using namespace cv;
 
 
+    int difference (uchar a,uchar b)
+    {
 
-    int templatematching (uchar threshold, Mat & origin, Mat excerpt , int ii, int jj)
+        int difference = 0;
+
+        if(((int)a) > ((int)b)) {difference=((int)a-(int)b);}
+        else {difference=( (int)b - (int) a );}
+        //cout << "dif: " << difference << " " ;
+        return difference;
+
+    }
+
+
+
+    unsigned int templatematching (int threshold, Mat & origin, Mat & excerpt , int ii, int jj)
     {
         int ie = 0;
         int je = 0;
+
+        int width_origin = origin.cols;
+        int height_origin = origin.rows;
         int width_excerpt = excerpt.cols;
         int height_excerpt = excerpt.rows;
 
-        while (ii < width_excerpt) {
+        while (ie < width_excerpt && ((ii+ie) < width_origin) && ((jj+je)<height_origin) )
+        {
+            uchar origin_at = origin.at<uchar>((ii+ie),(jj+je));
+            uchar excerpt_at = excerpt.at<uchar>((ie),(je));
 
 
-
-            if (abs(origin.at<uchar>((ii+ie), (jj+je)) - excerpt.at<uchar>(ie, je) ) < threshold )
+            if (difference(origin_at, excerpt_at) < threshold)
             {
 
-            while (je < height_excerpt ) {
+            while ((je < height_excerpt) && ((jj+je) < height_origin ) )
+            {
 
-                if (abs(origin.at<uchar>((ii+ie), (jj+je)) - excerpt.at<uchar>(ie, je)) < threshold)
+                if (difference(origin.at<uchar>((ii+ie), (jj+je)) , excerpt.at<uchar>(ie, je)) < (uchar) 10)
                 {
                     je++;
                     cout << "m" ;
-                    origin.at<uchar>((ii+ie),(jj+je)) = 255;
-                    circle(origin,Point((ii+ie),(jj+je)),5,Scalar_<double>(255,0,0));
+                    //origin.at<uchar>((ii+ie),(jj+je)) = 255;
+                    //circle(origin,Point_((ii+ie),(jj+je)),5,Scalar_<double>(255,0,0));
                 }
                 else
                     {
                     cout << "N";
-                    return 1;}
+                    return 1;
+                    }
                 }
 
-            ie++;
+            je++;
 
             }
             else
             {return 1;}
+            ie++;
         }
 
         return (ii+(width_excerpt/2)); // /2?
@@ -67,19 +88,20 @@ using namespace cv;
         cvtColor(excerpt,excerpt_bw,COLOR_BGR2GRAY);
         imshow("og_bw",origin_bw);
         waitKey(0);
+        waitKey(0);
         imshow("ex_bw",excerpt_bw);
         waitKey(0);
     int w = origin_bw.rows;
     int h = origin_bw.cols;
     int match = 0;
 
-    for (int i = 0 ; i < h ; i++) {
+    for (int i = 0 ; i < w ; i++) {
 
-        for (int j = 0; j < w; j++) {
+        for (int j = 0; j < h; j++) {
 
             match = templatematching(threshold,origin_bw,excerpt_bw,i,j);
-            if (match>1){return match;}
-            cout << j << "x ";
+            if (match > 1){return match;}
+            //cout << j << "x ";
         }
         cout << "i: "<< i << " " << endl;
     }
@@ -94,18 +116,18 @@ int main() {
     cv::Mat testbild = cv::imread("tmp2.jpg");
     cv::Mat ausschnitt = cv::imread("tmpausschnitt.jpg");
     cv::imshow("fenster", testbild);
-    cv::waitKey(100000);
-    cv::imshow("Ausschitt",ausschnitt);
-    waitKey(0);
-    unsigned int result = location(2,testbild,ausschnitt);
-    if(result!=1)
+    cv::waitKey(1000);
+    //cv::imshow("Ausschitt",ausschnitt);
+    //waitKey(0);
+    unsigned int result = location( '5' ,testbild,ausschnitt);
+    if(result > 1)
     {
 
         cout << "Bildausschnitt im Bild gefunden!\n" << "Es befindet sich in Reihe " << result << "" << endl;
-        for(int i=0;i<testbild.rows;i++)
-        {
-            testbild.at<uchar>(result,i) = (255);
 
+        for(int i = (testbild.cols -1);i>0;i--)
+        {
+            testbild.at<uchar>(result,i) = (0);
         }
 
         cout << result << endl;
