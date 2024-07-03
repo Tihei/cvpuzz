@@ -70,27 +70,22 @@ using namespace cv;
     int height_excerpt = excerpt.rows;
 
 
-    while (ie < (height_excerpt-1))
+    while (je < (width_excerpt-1))
     {
-        //Davon ausgeganen, das "ie" die breite und somit x sein soll, sind die Beiden Schleifen vertauscht
-        //Somit sind x und Y verdreht, sind aber laut Code immer richtig zugewiesen,
-        // aber in dieser Konfiguration scheint es zu funktionieren
-
 
         uchar origin_at = origin.at<uchar>((ii + ie), (jj + je));
         uchar excerpt_at = excerpt.at<uchar>((ie), (je));
 
-        int dif = difference(origin_at, excerpt_at);
+        int dif = 0;
 
             //cout<< " I:" << ie << " / " << width_excerpt << endl;
 
-            while (je < (width_excerpt-1) )
+            while (ie < (height_excerpt-1) )
             {
                 //cout<< " J:" << je << " / " << height_excerpt << " ";
 
-                origin_at = origin.at<uchar>((ii + ie), (jj + je) );
-                excerpt_at = excerpt.at<uchar>((ie), (je) );
-
+                origin_at = origin.at<uchar>( (jj + je) , (ii + ie)  );
+               excerpt_at = excerpt.at<uchar> (ie,je);
                 dif = difference(origin_at, excerpt_at);
                 //cout << " dif: " << dif << "  " ;
 
@@ -99,13 +94,13 @@ using namespace cv;
                    hits++;
                 }
 
-                je++;
+
                 if( ( (width_excerpt + ie + 1) > width_origin) || ( (height_excerpt + je + 1) > height_origin) )
                 {
                     break;
                 }
+                je++;
             }
-
 
         ie++;
     }
@@ -117,7 +112,7 @@ using namespace cv;
 
         Point_<int> location (int threshold , Mat& origin, Mat& excerpt)
     {
-        Mat origin_bw(origin.rows,origin.cols,CV_8U);
+        Mat origin_bw(origin.cols,origin.cols,CV_8U);
         Mat excerpt_bw(excerpt.rows,excerpt.cols,CV_8U);;
 
         //origin.convertTo(origin_bw,)
@@ -128,31 +123,35 @@ using namespace cv;
 
 
         imshow("og_bw",origin_bw);
-        waitKey(0);
+        waitKey(20);
         imshow("ex_bw",excerpt_bw);
         waitKey(0);
+
     int most_hits = 0;
     Point_<int> most_hits_point = Point_(0,0);
-    int w = (origin_bw.rows - 1 );
-    int h = (origin_bw.cols - 1 );
-    int we = (excerpt_bw.rows - 1 );
-    int he = (excerpt_bw.cols - 1 );
+    int w = (origin_bw.cols - 1 );
+    int h = (origin_bw.rows - 1 );
+    int we = (excerpt_bw.cols - 1 );
+    int he = (excerpt_bw.rows - 1 );
     //cout << "w h we he" << w << h << we << he << endl;
 
-    for (int i = 0 ; i < ((w-we-1)) ; i++)
+    for (int i = 0 ; i < ((h-he-1)) ; i++)
     {
         //cout << origin_bw.cols << " / "<< origin_bw.rows << endl;
         cout << " I: " << i << endl;
-        for (int j = 0; j < ((h-he-1)); j++) {
-
+        for (int j = 0; j < ((w-we-1)); j++) {
+            cout << " J: " << j << endl;
 
             int hits = templatematching(threshold,origin_bw,excerpt_bw,i,j);
+
             //cout << " Hits: " << hits << " " << endl ;
+
             if (hits == (origin_bw.cols*origin_bw.rows))break;
+
             if (hits > most_hits)
             {
                 most_hits=hits;
-                most_hits_point = Point_((j+(excerpt_bw.rows/2)) , (i + (excerpt_bw.cols/2)) );
+                most_hits_point = Point_((j+(excerpt_bw.cols/2)) , (i + (excerpt_bw.rows/2)) );
                 cout << "Hits:" << most_hits << " at :" << most_hits_point << endl;
             }
 
@@ -169,13 +168,13 @@ int main()
 {
 
     cv::Mat testbild = cv::imread("tmp2.jpg");
-    cv::Mat ausschnitt = cv::imread("tmpausschnitt3.jpg");
+    cv::Mat ausschnitt = cv::imread("tmpausschnitt2.jpg");
     cv::imshow("fenster", testbild);
-    cv::waitKey(1000);
+    cv::waitKey(10);
     //cv::imshow("Ausschitt",ausschnitt);
     //waitKey(0);
 
-    Point_<int> result = location( 10 ,testbild,ausschnitt);
+    Point_<int> result = location( 80 ,testbild,ausschnitt);
     cout << result << endl;
 
     if(result != Point_<int>(0,0))
@@ -187,6 +186,9 @@ int main()
 
         cv::imshow("fenster2",  testbild); //Test test test i love uuu <3 work weiter bitch
         cv::waitKey(0);
+        cv::waitKey(0);
+        cv::waitKey(0);
+
 
     }
     else
