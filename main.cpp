@@ -59,7 +59,9 @@ using namespace cv;
 
 
 
-    int templatematching (int threshold, Mat & origin, Mat & excerpt , int ii, int jj) {
+    int templatematching (int threshold, Mat & origin, Mat & excerpt , int ii, int jj)
+    {
+
     int ie = 0;
     int je = 0;
     int hits = 0;
@@ -70,23 +72,36 @@ using namespace cv;
     int height_excerpt = excerpt.rows;
 
 
-    while (je < (width_excerpt-1))
+    while (je < (height_excerpt-1))
     {
+        if( ( (width_excerpt + ie + 1) >= width_origin) || ( (height_excerpt + je + 1) >= height_origin) )
+        {
+            ie=0;
+            break;
+        }
 
-        uchar origin_at = origin.at<uchar>((ii + ie), (jj + je));
-        uchar excerpt_at = excerpt.at<uchar>((ie), (je));
+        uchar origin_at = origin.at<uchar>(   (jj + je),(ii + ie)  );
+        uchar excerpt_at = excerpt.at<uchar> (je, ie);
 
         int dif = 0;
 
-            //cout<< " I:" << ie << " / " << width_excerpt << endl;
+         //cout<< " Je:" << je << " / " << height_excerpt << " ";
 
-            while (ie < (height_excerpt-1) )
+
+            while (ie < width_excerpt )
             {
-                //cout<< " J:" << je << " / " << height_excerpt << " ";
+                if( ( (width_excerpt + ie + 1) > width_origin) )
+                {
+                    ie=0;
+                    break;
+                }
 
-                origin_at = origin.at<uchar>( (jj + je) , (ii + ie)  );
-               excerpt_at = excerpt.at<uchar> (ie,je);
+                //cout<< " Ie:" << ie << " / " << width_excerpt << endl;
+                //cout << "\n  Threshold:  " << threshold << "      \n" ;
+                origin_at = origin.at<uchar>(   (jj + je),(ii + ie)  );
+                excerpt_at = excerpt.at<uchar> (je, ie);
                 dif = difference(origin_at, excerpt_at);
+
                 //cout << " dif: " << dif << "  " ;
 
                 if (dif <= threshold)
@@ -95,14 +110,12 @@ using namespace cv;
                 }
 
 
-                if( ( (width_excerpt + ie + 1) > width_origin) || ( (height_excerpt + je + 1) > height_origin) )
-                {
-                    break;
-                }
-                je++;
-            }
 
-        ie++;
+                //cout << "Hits Ie :" << hits << "     " << endl;
+                ie++;
+            }
+        ie=0;
+        je++;
     }
 
     if(hits == (width_excerpt*height_excerpt)) cout << "Bildausschnitt im Bild gefunden!\n"<< endl;
@@ -115,9 +128,9 @@ using namespace cv;
         Mat origin_bw(origin.cols,origin.cols,CV_8U);
         Mat excerpt_bw(excerpt.rows,excerpt.cols,CV_8U);;
 
-        //origin.convertTo(origin_bw,)
         cvtColor(origin,origin_bw,COLOR_BGR2GRAY);
         cvtColor(excerpt,excerpt_bw,COLOR_BGR2GRAY);
+
         blurring(origin_bw);
         blurring(excerpt_bw);
 
@@ -135,12 +148,17 @@ using namespace cv;
     int he = (excerpt_bw.rows - 1 );
     //cout << "w h we he" << w << h << we << he << endl;
 
-    for (int i = 0 ; i < ((h-he-1)) ; i++)
+    for (int i = 0 ; i < ((w-we-1)) ; i++)
     {
         //cout << origin_bw.cols << " / "<< origin_bw.rows << endl;
-        cout << " I: " << i << endl;
-        for (int j = 0; j < ((w-we-1)); j++) {
-            cout << " J: " << j << endl;
+        //Test einer "Progress-Bar"
+        if (i % (w/100) == 0)
+        {
+            cout << (i / (w/100)) << "%" << endl;
+        }
+
+        for (int j = 0; j < (((h-he)-1)); j++) {
+            //cout << " J: " << j << "  / " << h <<"/" << he <<endl;
 
             int hits = templatematching(threshold,origin_bw,excerpt_bw,i,j);
 
@@ -151,7 +169,7 @@ using namespace cv;
             if (hits > most_hits)
             {
                 most_hits=hits;
-                most_hits_point = Point_((j+(excerpt_bw.cols/2)) , (i + (excerpt_bw.rows/2)) );
+                most_hits_point = Point_( (i + (excerpt_bw.cols/2)),(j+(excerpt_bw.rows/2)));
                 cout << "Hits:" << most_hits << " at :" << most_hits_point << endl;
             }
 
@@ -171,16 +189,19 @@ int main()
     cv::Mat ausschnitt = cv::imread("tmpausschnitt2.jpg");
     cv::imshow("fenster", testbild);
     cv::waitKey(10);
+
     //cv::imshow("Ausschitt",ausschnitt);
     //waitKey(0);
 
-    Point_<int> result = location( 80 ,testbild,ausschnitt);
+    Point_<int> result = location( 10 ,testbild,ausschnitt);
     cout << result << endl;
 
     if(result != Point_<int>(0,0))
     {
+        waitKey(20);
+        circle(testbild,result,50,Scalar_(0,0,255),4);
+        circle(testbild,result,5,Scalar_(0,0,255),1);
 
-        circle(testbild,result,50,Scalar_(0,0,255),3);
 
         cout << result << endl;
 
@@ -194,6 +215,7 @@ int main()
     else
     {
         cout << "Bildausschnitt nicht im Bild gefunden!" << endl;
+        return 1;
     }
 
     return 0;
