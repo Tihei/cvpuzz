@@ -186,7 +186,7 @@ int main()
 {
 
     cv::Mat testbild = cv::imread("tmp2.jpg");
-    cv::Mat ausschnitt = cv::imread("tmpausschnitt2.jpg");
+    cv::Mat ausschnitt = cv::imread("tmpausschnitt3.jpg");
     cv::imshow("fenster", testbild);
     cv::waitKey(10);
 
