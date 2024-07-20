@@ -57,6 +57,14 @@ build CMakeFiles\cvpuzz.dir\main.cpp.obj: CXX_COMPILER__cvpuzz_unscanned_Debug C
   TARGET_COMPILE_PDB = CMakeFiles\cvpuzz.dir\
   TARGET_PDB = cvpuzz.pdb
 
+build CMakeFiles\cvpuzz.dir\cvpuzz_math.cpp.obj: CXX_COMPILER__cvpuzz_unscanned_Debug C$:\Users\Tim\CLionProject\cvpuzz\cvpuzz_math.cpp || cmake_object_order_depends_target_cvpuzz
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -std:c++latest -MDd
+  INCLUDES = -IC:\Users\Tim\CLionProject\cvpuzz\( -IC:\Users\Tim\CLionProject\cvpuzz\) -external:IC:\opencv\build\include -external:W0
+  OBJECT_DIR = CMakeFiles\cvpuzz.dir
+  OBJECT_FILE_DIR = CMakeFiles\cvpuzz.dir
+  TARGET_COMPILE_PDB = CMakeFiles\cvpuzz.dir\
+  TARGET_PDB = cvpuzz.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target cvpuzz
@@ -65,7 +73,7 @@ build CMakeFiles\cvpuzz.dir\main.cpp.obj: CXX_COMPILER__cvpuzz_unscanned_Debug C
 #############################################
 # Link the executable cvpuzz.exe
 
-build cvpuzz.exe: CXX_EXECUTABLE_LINKER__cvpuzz_Debug CMakeFiles\cvpuzz.dir\main.cpp.obj | C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib
+build cvpuzz.exe: CXX_EXECUTABLE_LINKER__cvpuzz_Debug CMakeFiles\cvpuzz.dir\main.cpp.obj CMakeFiles\cvpuzz.dir\cvpuzz_math.cpp.obj | C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib C$:\opencv\build\x64\vc16\lib\opencv_world4100d.lib
   FLAGS = /DWIN32 /D_WINDOWS /EHsc /Ob0 /Od /RTC1 -MDd
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  C:\opencv\build\x64\vc16\lib\opencv_world4100d.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

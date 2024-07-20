@@ -15,6 +15,8 @@ include_directories(( ${OpenCV_INCLUDE_DIRS}))
 
 set(CMAKE_PREFIX_PATH "C:/opencv/")
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+        cvpuzz_math.cpp
+        cvpuzz_math.h)
 
 target_link_libraries(cvpuzz PRIVATE ${OpenCV_LIBS})
