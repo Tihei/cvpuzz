@@ -7,7 +7,7 @@
 using namespace cv;
 
 namespace cvpuzz {
-    int blurring(Mat im,int row,int col) {
+    int blurring(Mat &im,int row,int col) {
 
 
         Mat blurred(row, col, CV_8U);

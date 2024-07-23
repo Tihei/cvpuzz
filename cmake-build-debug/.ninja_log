@@ -49,3 +49,6 @@
 4486	4678	7431883447179094	cvpuzz.exe	b3626a0215101e3d
 7	4530	7431961354896889	CMakeFiles/cvpuzz.dir/main.cpp.obj	1e19a3d2138a62
 4531	4757	7431961400140039	cvpuzz.exe	b3626a0215101e3d
+30	6693	7434578603766935	CMakeFiles/cvpuzz.dir/main.cpp.obj	1e19a3d2138a62
+45	6707	7434578603906568	CMakeFiles/cvpuzz.dir/cvpuzz_math.cpp.obj	af12bed5af25c6ec
+9	6044	7434579659265040	CMakeFiles/cvpuzz.dir/cvpuzz_math.cpp.obj	af12bed5af25c6ec
