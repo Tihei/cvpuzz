@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <mutex>
 #include "cvpuzz_math.h"
+#include <cmath>
 
 
 
@@ -192,7 +193,8 @@ int main()
 
     cv::Mat testbild = cv::imread((projectpath+"\\pictures\\tmp2.jpg"));
     cv::Mat ausschnitt = cv::imread(projectpath+"\\pictures\\tmpausschnitt3.jpg");
-    cv::Mat ausschnitt2 = cv::imread(projectpath+"\\pictures\\tmpausschnitt32.jpg");
+    cv::Mat ausschnitt2 = cv::imread(projectpath+"\\pictures\\tmpausschnitt31.jpg");
+    cv::Mat ausschnitt3 = cv::imread(projectpath+"\\pictures\\tmpausschnitt32.jpg");
 
 
     //cv::imshow("fenster", testbild);
@@ -206,11 +208,10 @@ int main()
 
     vector<Point_<int>> result = location( 20 ,testbild,ausschnitt2);
 
-    cout << result << endl;
 
     //circle(testbild,maxloc,5,(0,0,255,0),2);
 
-    cv::imshow("result",testbild);
+    //cv::imshow("result",testbild);
 
     waitKey(10000);
 
@@ -224,7 +225,7 @@ int main()
         //cv::circle(testbild,result[0],5,Scalar_(0,0,255,0),1);
         //Diese beide Funktionen scheinen ohne Änderungen scheinbar Grundlos nicht mehr zu funktionieren.
 
-        cv::rectangle(testbild,result[0],result[1],(0,255,0),4);
+        cv::rectangle(testbild,result[0],result[1],Scalar_<int>(0,255,0,0),4);
 
         //Zuerst wird meine Implementation des "Ausschnitt-Finderns" ausgeführt,
         //der leider eine Weile braucht, nach aktuellem unoptimiertem Stand.
@@ -233,7 +234,7 @@ int main()
 
 
         cv::Mat resultmat((testbild.rows),(testbild.cols),CV_32FC1);
-        cv::matchTemplate(testbild,ausschnitt,resultmat,3);
+        cv::matchTemplate(testbild,ausschnitt2,resultmat,3);
 
         Point_<int> maxloc = Point_(0,0);
 
@@ -241,47 +242,58 @@ int main()
         cout << maxloc << endl;
 
         cv::rectangle(testbild,
-                      Point_<int>((maxloc.x),(maxloc.y)),
-                      Point_<int>((maxloc.x)+(ausschnitt.cols),(maxloc.y)+(ausschnitt.rows)),
-                      (20,100,0),4
+                      Point_<int> ( (maxloc.x) , (maxloc.y) ),
+                      Point_<int>( (maxloc.x) + (ausschnitt.cols) , (maxloc.y) + (ausschnitt.rows) ),
+                      Scalar_<int>( 0,0,0,255 ) ,4
                       );
+        float tmp_dif_row = cvpuzz::difference( (result[1].y) ,(result[0].y) );
+        float tmp_dif_cols = cvpuzz::difference( (result[1].x) , (result[0].x) ) ;
+        float difference_ = sqrt
+                (
+                        ( ( tmp_dif_row*tmp_dif_row ) + (tmp_dif_cols * tmp_dif_cols ) )
+                );
 
         waitKey(1000);
 
         cout << result << endl;
 
+        cout << "Difference between own and internal function:" << difference_ << endl;
+
         waitKey(1000);
 
 
-        cv::imshow("fenster2", testbild);
-        cv::waitKey(1000);
-
-        cv::imshow("Circled", testbild);
+        cv::imshow("Fenster3", testbild);
         cv::waitKey(100000);
 
         result = location(30, testbild, ausschnitt2);
 
             cv::circle(testbild,
                        Point_( ( (result[0].x) + (ausschnitt2.cols/2)),((result[0].y) + (ausschnitt2.rows/2)) ),
-                       50, Scalar_(0, 255, 0,0), 4
+                       50, Scalar_(255, 0, 0,0), 4
+
                        );
 
-            cv::rectangle(testbild,result[0],result[1],(255,0,0),3);
-
+            cv::rectangle(testbild,result[0],result[1],Scalar_<int>(255,0,0,0),3);
+                                                                                            // B G R A
 
             cv::matchTemplate(testbild,ausschnitt2,resultmat,3);
 
             cv::minMaxLoc(resultmat, nullptr,nullptr,nullptr,&maxloc);
 
 
+
+
+
             cout << maxloc << endl;
-
-
+        cv::circle(testbild,
+                   maxloc ,
+                   50, Scalar_(0, 0, 255,0), 4
+                                                 //B G R A (Green)
+                   );
 
             cv::waitKey(1000);
-            cv::imshow("fenster3", testbild);
+            cv::imshow("circled", testbild);
             cv::waitKey(0);
-
 
     }
 

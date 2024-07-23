@@ -7,7 +7,7 @@
 using namespace cv;
 
 namespace cvpuzz {
-    int blurring(Mat &im,int row,int col) {
+    int blurring(Mat im,int row,int col) {
 
 
         Mat blurred(row, col, CV_8U);
@@ -39,6 +39,17 @@ namespace cvpuzz {
 
         if ((a) > (b)) { difference = ((int) a - (int) b); }
         else { difference = ((int) b - (int) a); }
+
+        return difference;
+
+    }
+
+    float difference(int a, int b) {
+
+        int difference = 0;
+
+        if ((a) > (b)) { difference = ( a - b ); }
+        else { difference = ( b - a ) ; }
 
         return difference;
 
