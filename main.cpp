@@ -141,25 +141,31 @@ using namespace cv;
     {
         //Eine "Progress-Bar"
 
+
         if (i % ( (w-we) / 100 ) == 0 )
         {
             cout << (i / ( (w-we) / 100 ) ) << "%" << endl;
         }
 
+
+
         for (int j = 0; j < (((h-he)-1)/2); j++) {
-            //cout << " J: " << j << "  / " << h <<"/" << he <<endl;
+
 
             int hits = templatematching(threshold,origin_bw,excerpt_bw,i,j*2);
 
+
             //cout << " Hits: " << hits << " " << endl ;
+
 
             if (hits == (origin_bw.cols*origin_bw.rows)) break;
 
+
             if (min_dif > hits)
             {
+
                 min_dif = hits;
                 most_hits_point = Point_((i) , (j) );
-                //cout << "Dif: " << min_dif << " at : " << most_hits_point << endl ;
 
             }
 
@@ -172,14 +178,19 @@ using namespace cv;
                 cout << "Hits:" << most_hits << " at :" << most_hits_point << endl;
             } */
 
+
         }
 
+
     }
+
 
     most_hits_point_end = Point_(( (most_hits_point.x) + (excerpt_bw.cols) ) , ( (most_hits_point.y) +(excerpt_bw.rows) ));
 
 
-    return {most_hits_point , most_hits_point_end} ;
+    return{most_hits_point , most_hits_point_end};
+
+
 
         }
 
@@ -192,8 +203,8 @@ int main()
         const String projectpath = "C:\\Users\\Tim\\CLionProject\\cvpuzz" ;
 
     cv::Mat testbild = cv::imread((projectpath+"\\pictures\\tmp2.jpg"));
-    cv::Mat ausschnitt = cv::imread(projectpath+"\\pictures\\tmpausschnitt3.jpg");
-    cv::Mat ausschnitt2 = cv::imread(projectpath+"\\pictures\\tmpausschnitt31.jpg");
+    cv::Mat ausschnitt2 = cv::imread(projectpath+"\\pictures\\tmpausschnitt3.jpg");
+    cv::Mat ausschnitt = cv::imread(projectpath+"\\pictures\\tmpausschnitt31.jpg");
     cv::Mat ausschnitt3 = cv::imread(projectpath+"\\pictures\\tmpausschnitt32.jpg");
 
 
@@ -221,24 +232,28 @@ int main()
         waitKey(1000);
         cvtColor(testbild,testbild,COLOR_BGRA2BGR);
 
-        //cv::circle(testbild,result[0],50,Scalar_(0,0,255,0),4);
-        //cv::circle(testbild,result[0],5,Scalar_(0,0,255,0),1);
-        //Diese beide Funktionen scheinen ohne Änderungen scheinbar Grundlos nicht mehr zu funktionieren.
+        cv::circle(testbild,result[0],50,Scalar_<double>(0,0,255,0),4);
+        cv::circle(testbild,result[0],5,Scalar_<double>(0,0,255,0),1);
 
-        cv::rectangle(testbild,result[0],result[1],Scalar_<int>(0,255,0,0),4);
+        cv::rectangle(testbild,result[0],result[1],Scalar_<double>(0,255,0,0),4);
+                                                                                        // B G R A
+
 
         //Zuerst wird meine Implementation des "Ausschnitt-Finderns" ausgeführt,
         //der leider eine Weile braucht, nach aktuellem unoptimiertem Stand.
         //In Folge wird die Opencv-interne Funktion aufgerufen, die effizienter läuft
+        //und die Ergebnisse der beiden verglichen.
 
 
 
         cv::Mat resultmat((testbild.rows),(testbild.cols),CV_32FC1);
         cv::matchTemplate(testbild,ausschnitt2,resultmat,3);
 
+
         Point_<int> maxloc = Point_(0,0);
 
-        cv::minMaxLoc(resultmat,nullptr, nullptr,nullptr,&maxloc);
+
+        cv::minMaxLoc(resultmat,nullptr, nullptr,nullptr , &maxloc);
         cout << maxloc << endl;
 
         cv::rectangle(testbild,
@@ -269,11 +284,11 @@ int main()
 
             cv::circle(testbild,
                        Point_( ( (result[0].x) + (ausschnitt2.cols/2)),((result[0].y) + (ausschnitt2.rows/2)) ),
-                       50, Scalar_(255, 0, 0,0), 4
+                       50, Scalar_<double>(255, 0, 0,0), 4
 
                        );
 
-            cv::rectangle(testbild,result[0],result[1],Scalar_<int>(255,0,0,0),3);
+            cv::rectangle(testbild,result[0],result[1],Scalar_<double>(255,0,0,0),3);
                                                                                             // B G R A
 
             cv::matchTemplate(testbild,ausschnitt2,resultmat,3);
@@ -287,7 +302,7 @@ int main()
             cout << maxloc << endl;
         cv::circle(testbild,
                    maxloc ,
-                   50, Scalar_(0, 0, 255,0), 4
+                   50, Scalar_<double>(0, 0, 255,0), 4
                                                  //B G R A (Green)
                    );
 
